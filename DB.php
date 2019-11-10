@@ -12,7 +12,6 @@ class DB{
     public static function getInstance(){
         if(!isset(static::$connection)){
             static::$connection=new PDO(getDNS(),USER,PASSWORD);
-            echo "not set";
         }
         return self::$connection;
     }

@@ -3,6 +3,5 @@
 use app\models\User;
 
 require '../load.php';
-$user=new User();
-$users=$user->execQuery("select * from users");
+$users=User::all();
 var_dump($users);
