@@ -12,5 +12,9 @@ class User extends QBuilder{
     public function tickets(){
         return $this->hasMany("\app\models\Ticket");
     }
+
+    public function profile(){
+        return $this->hasOne("app\models\Profile");
+    }
 }
 ?>

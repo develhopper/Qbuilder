@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Profile;
 use app\models\User;
 
 require '../load.php';
@@ -15,5 +16,11 @@ $user=new User();
 // $user->password="password";
 // $user->update(true);
 // $user->update()->where("username","alireza.tjd")->execute();
-$tickets=$user->find(1)->tickets();
-var_dump($tickets);
+// $tickets=$user->find(1)->tickets();
+$user=$user->find(1);
+$profile=$user->profile();
+if(!$profile){
+    $profile=new Profile();
+    $profile->save(["lastname"=>"alireza","firstname"=>"tajadod","user_id"=>$user->id]);
+}
+var_dump($profile);

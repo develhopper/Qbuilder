@@ -104,7 +104,12 @@ class QBuilder{
     }
 
     public function hasOne($name){
-
+        $model = new $name;
+        $model->related = $this->table;
+        $result=$model->select()->where($model->get_fkey(), $this->id)->first();
+        // if(!$result)
+        //     return $model;
+        return $result;
     }
 
     public function hasMany($name){
