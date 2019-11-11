@@ -57,6 +57,31 @@ class QBuilder{
             return $this->db->lastInsertId();
     }
 
+    public function update($exec=false){
+        $query="update $this->table set ";
+        $cols=[];
+        foreach($this->fields as $field){
+            if(isset($this->$field)){
+                array_push($cols,"$field=:$field");
+                $this->params[":$field"]=$this->$field;
+            }
+        }
+        $query.=implode(",",$cols);
+        $this->query=$query;
+        if($exec){
+            $this->query.=" where id=$this->id";
+            if($this->execute()){
+                return true;
+            }
+        }
+        return $this;
+    }
+
+    public function find($id){
+        $this->query="select * from $this->table where id=$id";
+        return $this->execute()->fetchObject(get_class($this));
+    }
+
     public function first(){
         $this->query.=" limit 1";
         return $this->execute()->fetchObject(get_class($this));
@@ -69,6 +94,7 @@ class QBuilder{
     public function execute(){
         $stmt=$this->db->prepare($this->query);
         $stmt->execute($this->params);
+        $this->params=[];
         return $stmt;
     }
 
