@@ -5,6 +5,8 @@ class QBuilder{
     protected $table;
     protected $query;
     protected $params=[];
+    protected $fields=[];
+
     public function __construct()
     {
         $this->db=DB::getInstance();
@@ -30,6 +32,29 @@ class QBuilder{
         }
         $this->query.=$condition." ";
         return $this;
+    }
+
+    public function save($params=[]){
+        $query="insert into $this->table (:C) values (:V)";
+        $cols=[];
+        $keys=[];
+        if(!empty($params)){
+            foreach($params as $key=>$param){
+                $this->$key=$param;
+            }
+        }
+        foreach($this->fields as $field){
+            if(isset($this->$field)){
+                array_push($cols, $field);
+                array_push($keys,":$field");
+                $this->params[":$field"]=$this->$field;
+            }
+        }
+        $query=preg_replace("/:C/",implode(",",$cols),$query);
+        $query = preg_replace("/:V/", implode(",",$keys), $query);
+        $this->query=$query;
+        if($this->execute())
+            return $this->db->lastInsertId();
     }
 
     public function first(){
