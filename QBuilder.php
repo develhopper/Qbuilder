@@ -3,6 +3,7 @@ class QBuilder{
     /** @var \PDO */
     protected $db;
     protected $table;
+    protected $primary="id";
     protected $query;
     protected $params=[];
     protected $fields=[];
@@ -116,6 +117,12 @@ class QBuilder{
         $model=new $name;
         $model->related=$this->table;
         return $model->select()->where($model->get_fkey(),$this->id)->get();
+    }
+
+    public function belongsTo($name){
+        $model = new $name;
+        $this->related=$model->table;
+        return $model->select()->where($model->primary,$this->{$this->get_fkey()})->get();
     }
 
     public function get_fkey(){

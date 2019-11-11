@@ -11,4 +11,8 @@ class Profile extends QBuilder{
     protected $foreign_keys=[
         "users"=>"user_id"
     ];
+
+    public function user(){
+        return $this->belongsTo("app\models\User");
+    }
 }

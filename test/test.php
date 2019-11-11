@@ -19,8 +19,8 @@ $user=new User();
 // $tickets=$user->find(1)->tickets();
 $user=$user->find(1);
 $profile=$user->profile();
-if(!$profile){
-    $profile=new Profile();
-    $profile->save(["lastname"=>"alireza","firstname"=>"tajadod","user_id"=>$user->id]);
-}
-var_dump($profile);
+// if(!$profile){
+//     $profile=new Profile();
+//     $profile->save(["lastname"=>"alireza","firstname"=>"tajadod","user_id"=>$user->id]);
+// }
+var_dump($profile->user());
