@@ -8,5 +8,9 @@ class User extends QBuilder{
     protected $fields=[
         "username","password","flag"
     ];
+
+    public function tickets(){
+        return $this->hasMany("\app\models\Ticket");
+    }
 }
 ?>

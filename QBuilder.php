@@ -6,7 +6,7 @@ class QBuilder{
     protected $query;
     protected $params=[];
     protected $fields=[];
-
+    protected $foreign_keys=[];
     public function __construct()
     {
         $this->db=DB::getInstance();
@@ -101,6 +101,22 @@ class QBuilder{
     public function all(){
         $stmt=$this->select()->execute();
         return $stmt->fetchAll(PDO::FETCH_CLASS,get_class($this));
+    }
+
+    public function hasOne($name){
+
+    }
+
+    public function hasMany($name){
+        $model=new $name;
+        $model->related=$this->table;
+        return $model->select()->where($model->get_fkey(),$this->id)->get();
+    }
+
+    public function get_fkey(){
+        if(isset($this->related)){
+            return $this->foreign_keys[$this->related];
+        }
     }
 
 }
