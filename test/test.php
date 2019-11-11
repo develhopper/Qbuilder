@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Flight;
 use app\models\Profile;
 use app\models\User;
 
@@ -17,10 +18,13 @@ $user=new User();
 // $user->update(true);
 // $user->update()->where("username","alireza.tjd")->execute();
 // $tickets=$user->find(1)->tickets();
-$user=$user->find(1);
-$profile=$user->profile();
+// $user=$user->find(1);
+// $profile=$user->profile();
 // if(!$profile){
 //     $profile=new Profile();
 //     $profile->save(["lastname"=>"alireza","firstname"=>"tajadod","user_id"=>$user->id]);
 // }
-var_dump($profile->user());
+// var_dump($profile);
+$flight=new Flight();
+$users=$flight->find(3)->users();
+var_dump($users);

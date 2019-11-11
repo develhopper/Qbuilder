@@ -11,4 +11,8 @@ class Ticket extends Model{
     protected $foreign_keys=[
         "users"=>"user_id"
     ];
+
+    public function users(){
+        return $this->belongsToMany("app\models\User");
+    }
 }

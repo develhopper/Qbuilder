@@ -8,6 +8,7 @@ class QBuilder{
     protected $params=[];
     protected $fields=[];
     protected $foreign_keys=[];
+    protected $pivot_table=[];
     public function __construct()
     {
         $this->db=DB::getInstance();
@@ -121,8 +122,17 @@ class QBuilder{
 
     public function belongsTo($name){
         $model = new $name;
-        $this->related=$model->table;
-        return $model->select()->where($model->primary,$this->{$this->get_fkey()})->get();
+        return $model->select()->where($model->primary,$this->{$this->get_fkey()})->first();
+    }
+
+    public function belongsToMany($name){
+        $model = new $name;
+        $this->related = explode(":",$this->pivot_table[$model->table]);
+        $this->query="select * from $this->table 
+        join {$this->related[0]} on $this->table.$this->primary={$this->related[1]} 
+        join $model->table on $model->table.id={$this->related[2]}";
+        return $this->get();
+        // return $model->select()->where($model->primary, $this->{$this->get_fkey()})->get();
     }
 
     public function get_fkey(){
