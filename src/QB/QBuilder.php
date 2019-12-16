@@ -1,4 +1,9 @@
 <?php
+namespace QB;
+
+use PDO;
+use QB\DB;
+
 class QBuilder{
     /** @var \PDO */
     protected $db;

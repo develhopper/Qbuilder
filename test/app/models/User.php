@@ -1,7 +1,7 @@
 <?php
 namespace app\models;
 
-use QBuilder;
+use QB\QBuilder;
 
 class User extends QBuilder{
     protected $table="users";

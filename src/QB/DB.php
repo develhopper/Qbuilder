@@ -1,4 +1,8 @@
 <?php
+namespace QB;
+
+use PDO;
+
 class DB{
     private static $connection;
     private static $options=[

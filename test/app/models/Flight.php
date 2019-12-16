@@ -1,7 +1,7 @@
 <?php
 namespace app\models;
 
-use QBuilder;
+use QB\QBuilder;
 
 class Flight extends QBuilder{
     protected $table="flight";

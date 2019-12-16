@@ -1,0 +1,19 @@
+{
+    "name": "develhopper/qbuilder",
+    "description": "free and opensource php query builder library",
+    "type": "library",
+    "license": "GPL-3.0-only",
+    "authors": [
+        {
+            "name": "develhoper",
+            "email": "develhoper.0@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-0": {
+            "QB":"src/"
+        }
+    }
+}

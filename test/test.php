@@ -1,10 +1,11 @@
 <?php
+require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/load.php';
 
 use app\models\Flight;
 use app\models\Profile;
 use app\models\User;
 
-require '../load.php';
 $user=new User();
 // $r=$user->select()->where("id",">=",2)->get();
 // $r=$user->all();
