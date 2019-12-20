@@ -1,14 +1,14 @@
 <?php
 namespace app\models;
 
-use QBuilder;
+use QB\QBuilder;
 
 class Profile extends QBuilder{
     protected $table="profile";
     protected $fields=[
         "lastname","firstname","user_id"
     ];
-    protected $foreign_keys=[
+    protected $related_tables=[
         "users"=>"user_id"
     ];
 

@@ -12,8 +12,9 @@ class QBuilder{
     protected $query;
     protected $params=[];
     protected $fields=[];
-    protected $foreign_keys=[];
+    protected $related_tables=[];
     protected $pivot_table=[];
+
     public function __construct()
     {
         $this->db=DB::getInstance();
@@ -136,13 +137,16 @@ class QBuilder{
         $this->query="select * from $this->table 
         join {$this->related[0]} on $this->table.$this->primary={$this->related[1]} 
         join $model->table on $model->table.id={$this->related[2]}";
+        if(isset($this->id)){
+            $this->query.=" where $this->table.id=$this->id";
+        }
         return $this->get();
         // return $model->select()->where($model->primary, $this->{$this->get_fkey()})->get();
     }
 
     public function get_fkey(){
         if(isset($this->related)){
-            return $this->foreign_keys[$this->related];
+            return $this->related_tables[$this->related];
         }
     }
 
