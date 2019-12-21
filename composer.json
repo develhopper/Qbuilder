@@ -15,5 +15,6 @@
         "psr-0": {
             "QB":"src/"
         }
-    }
+    },
+    "prefer-stable": true
 }
