@@ -15,13 +15,13 @@ class DB{
 
     public static function getInstance(){
         if(!isset(static::$connection)){
-            static::$connection=new PDO(self::getDNS(),USER,PASSWORD);
+            static::$connection=new PDO(self::getDNS(),DB_USER,DB_PASSWORD);
         }
         return self::$connection;
     }
 
     public static function getDns(){
-        return DRIVER . ":host=" . HOST . ";dbname=" . DB;
+        return DB_DRIVER . ":host=" . DB_HOST . ";dbname=" . DB_NAME;
     }
 }
 ?>

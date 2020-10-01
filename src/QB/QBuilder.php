@@ -9,11 +9,12 @@ class QBuilder{
     protected $db;
     protected $table;
     protected $primary="id";
-    protected $query;
     protected $params=[];
     protected $fields=[];
     protected $related_tables=[];
     protected $pivot_table=[];
+    
+    public $query;
 
     public function __construct()
     {
@@ -51,6 +52,9 @@ class QBuilder{
                 $this->$key=$param;
             }
         }
+        if(empty($this->fields)){
+            $this->fields=array_keys($params);
+        }
         foreach($this->fields as $field){
             if(isset($this->$field)){
                 array_push($cols, $field);
@@ -63,6 +67,8 @@ class QBuilder{
         $this->query=$query;
         if($this->execute())
             return $this->db->lastInsertId();
+        else
+            return -1;
     }
 
     public function update($exec=false){
@@ -83,6 +89,13 @@ class QBuilder{
             }
         }
         return $this;
+    }
+
+    public function delete(...$cond){
+        if(count($cond)>1){
+            $this->query="delete from $this->table ";
+            return $this->where(...$cond);
+        }
     }
 
     public function find($id){
