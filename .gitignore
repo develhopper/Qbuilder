@@ -1,3 +1,5 @@
 .vscode/launch.json
 
 /vendor/
+composer.lock
+/tests/config.php

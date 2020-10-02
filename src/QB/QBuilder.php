@@ -14,7 +14,7 @@ class QBuilder{
     protected $related_tables=[];
     protected $pivot_table=[];
     
-    public $query;
+    protected $query;
 
     public function __construct()
     {
@@ -55,6 +55,7 @@ class QBuilder{
         if(empty($this->fields)){
             $this->fields=array_keys($params);
         }
+
         foreach($this->fields as $field){
             if(isset($this->$field)){
                 array_push($cols, $field);
@@ -72,8 +73,12 @@ class QBuilder{
     }
 
     public function update($exec=false){
+        //Bug:: this will update all cols
+
         $query="update $this->table set ";
         $cols=[];
+        if(empty($this->fields))
+            $this->fields=$this->public_fields();
         foreach($this->fields as $field){
             if(isset($this->$field)){
                 array_push($cols,"$field=:$field");
@@ -83,10 +88,9 @@ class QBuilder{
         $query.=implode(",",$cols);
         $this->query=$query;
         if($exec){
-            $this->query.=" where id=$this->id";
-            if($this->execute()){
-                return true;
-            }
+            $primary_key=$this->primary;
+            $this->query.=" where $primary_key='{$this->$primary_key}'";
+            return $this->execute()->rowCount();
         }
         return $this;
     }
@@ -161,6 +165,13 @@ class QBuilder{
         if(isset($this->related)){
             return $this->related_tables[$this->related];
         }
+    }
+
+    public function public_fields(){
+        $a=array_keys(get_class_vars(get_class($this)));
+        $b=array_keys(get_object_vars($this));
+
+        return array_diff($b,$a);
     }
 
 }

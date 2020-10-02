@@ -1,11 +1,11 @@
 <?php
-const BASE=__DIR__;
 require __DIR__.'/config.php';
+
 spl_autoload_register(function($name){
-    $name=BASE."/".str_replace("\\","/",$name).".php";
+    $name=__DIR__."/".str_replace("\\","/",$name).".php";
     if(file_exists($name))
         require_once $name;
-        else
-        echo "not found";
+    else
+        echo "debug::: not found $name \r\n";
 });
 ?>
