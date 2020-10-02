@@ -1,2 +1,5 @@
 # Qbuilder
-Free and Opensource php Query Builder Library
+Yet another Query Builder PHP library
+
+## Documentation
+coming soon ...
