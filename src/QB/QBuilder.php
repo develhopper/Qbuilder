@@ -13,12 +13,29 @@ class QBuilder{
     protected $fields=[];
     protected $related_tables=[];
     protected $pivot_table=[];
-    
+    protected $changed=[];
     protected $query;
 
     public function __construct()
     {
         $this->db=DB::getInstance();
+    }
+
+    public function __set($key,$value){
+        if(property_exists($this,$key))
+            $this->$key=$value;
+        else{
+            if(in_array($key,array_keys($this->fields)))
+                array_push($this->changed,$key);
+            $this->fields[$key]=$value;
+        }
+    }
+    
+    public function __get($key){
+        if(property_exists($this,$key))
+            return $this->$key;
+        else
+            return $this->fields[$key];
     }
 
     public function execQuery($query){
@@ -52,16 +69,11 @@ class QBuilder{
                 $this->$key=$param;
             }
         }
-        if(empty($this->fields)){
-            $this->fields=array_keys($params);
-        }
 
-        foreach($this->fields as $field){
-            if(isset($this->$field)){
-                array_push($cols, $field);
-                array_push($keys,":$field");
-                $this->params[":$field"]=$this->$field;
-            }
+        foreach($this->fields as $key=>$value){
+                array_push($cols, $key);
+                array_push($keys,":$key");
+                $this->params[":$key"]=$this->fields[$key];
         }
         $query=preg_replace("/:C/",implode(",",$cols),$query);
         $query = preg_replace("/:V/", implode(",",$keys), $query);
@@ -73,18 +85,14 @@ class QBuilder{
     }
 
     public function update($exec=false){
-        //Bug:: this will update all cols
-
         $query="update $this->table set ";
         $cols=[];
-        if(empty($this->fields))
-            $this->fields=$this->public_fields();
-        foreach($this->fields as $field){
-            if(isset($this->$field)){
-                array_push($cols,"$field=:$field");
-                $this->params[":$field"]=$this->$field;
-            }
+
+        foreach($this->changed as $key){
+            array_push($cols,"$key=:$key");
+            $this->params[":$key"]=$this->fields[$key];
         }
+
         $query.=implode(",",$cols);
         $this->query=$query;
         if($exec){
@@ -165,13 +173,6 @@ class QBuilder{
         if(isset($this->related)){
             return $this->related_tables[$this->related];
         }
-    }
-
-    public function public_fields(){
-        $a=array_keys(get_class_vars(get_class($this)));
-        $b=array_keys(get_object_vars($this));
-
-        return array_diff($b,$a);
     }
 
 }
