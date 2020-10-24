@@ -21,7 +21,7 @@ class DB{
     }
 
     public static function getDns(){
-        return DB_DRIVER . ":host=" . DB_HOST . ";dbname=" . DB_NAME;
+        return DB_DRIVER . ":host=" . DB_HOST . ";dbname=" . DB_NAME. ";charset=utf8";
     }
 }
 ?>

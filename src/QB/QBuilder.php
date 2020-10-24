@@ -11,6 +11,7 @@ class QBuilder{
     protected $primary="id";
     protected $params=[];
     protected $fields=[];
+    protected $related;
     protected $related_tables=[];
     protected $pivot_table=[];
     protected $changed=[];
@@ -148,7 +149,8 @@ class QBuilder{
     public function hasMany($name){
         $model=new $name;
         $model->related=$this->table;
-        return $model->select()->where($model->get_fkey(),$this->id)->get();
+        $primary_key=$this->primary;
+        return $model->select()->where($model->get_fkey(),$this->$primary_key)->get();
     }
 
     public function belongsTo($name){
