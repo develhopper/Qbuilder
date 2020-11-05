@@ -61,6 +61,32 @@ class QBuilder{
         return $this;
     }
 
+    public function and(...$cond){
+        $condition=" and ";
+        if(count($cond)==2){
+            $this->params[":and"]=$cond[1];
+            $condition.="$cond[0]=:and";
+        }else{
+            $this->params[":and"] = $cond[2];
+            $condition.="$cond[0]$cond[1]:and";
+        }
+        $this->query.=$condition." ";
+        return $this;
+    }
+
+    public function or(...$cond){
+        $condition=" or ";
+        if(count($cond)==2){
+            $this->params[":or"]=$cond[1];
+            $condition.="$cond[0]=:or";
+        }else{
+            $this->params[":or"] = $cond[2];
+            $condition.="$cond[0]$cond[1]:or";
+        }
+        $this->query.=$condition." ";
+        return $this;
+    }
+
     public function save($params=[]){
         $query="insert into $this->table (:C) values (:V)";
         $cols=[];
