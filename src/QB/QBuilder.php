@@ -87,6 +87,29 @@ class QBuilder{
         return $this;
     }
 
+    public function upsert($values=[]){
+        $query="insert into $this->table (:C) values (:V) on duplicate key update (:U)";
+        $cols=[];
+        $keys=[];
+        foreach($this->fields as $key=>$value){
+            array_push($cols, $key);
+            array_push($keys,":$key");
+            $this->params[":$key"]=$this->fields[$key];
+        }
+        $query=preg_replace("/:C/",implode(",",$cols),$query);
+        $query = preg_replace("/:V/", implode(",",$keys), $query);
+        $u="";
+        for($i=0;$i<count($cols);$i++){
+            $u.="$cols[$i]=$keys[$i],";
+        }
+        foreach($values as $key=>$value){
+            $u=str_replace($key,$value,$u);
+        }
+        $u=rtrim($u,",");
+        $this->query=str_replace("(:U)",$u,$query);
+        return $this->execute();
+    }
+
     public function save($params=[]){
         $query="insert into $this->table (:C) values (:V)";
         $cols=[];
