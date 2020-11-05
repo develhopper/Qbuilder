@@ -171,6 +171,21 @@ class QBuilder{
         // return $model->select()->where($model->primary, $this->{$this->get_fkey()})->get();
     }
 
+    public function join($name,$type=""){
+        $model=new $name;
+        $model->related=$this->table;
+        $this->query="select * from {$this->table} $type join {$model->table} on {$this->table}.{$this->primary}={$model->table}.{$model->get_fkey()}";
+        return $this;
+    }
+    
+    public function left_join($name){
+        return $this->join($name,"left");
+    }
+
+    public function right_join($name){
+        return $this->join($name,"right");
+    }
+
     public function get_fkey(){
         if(isset($this->related)){
             return $this->related_tables[$this->related];
