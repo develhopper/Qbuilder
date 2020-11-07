@@ -87,6 +87,11 @@ class QBuilder{
         return $this;
     }
 
+    public function sort($by,$mode="ASC"){
+        $this->query.=" ORDER By $by $mode";
+        return $this;
+    }
+
     public function upsert($values=[]){
         $query="insert into $this->table (:C) values (:V) on duplicate key update (:U)";
         $cols=[];
@@ -165,9 +170,12 @@ class QBuilder{
         return $this->execute()->fetchObject(get_class($this));
     }
 
-    public function first(){
-        $this->query.=" limit 1";
-        return $this->execute()->fetchObject(get_class($this));
+    public function first($count=1){
+		$this->query.=" limit $count";
+		if($count==1)
+			return $this->execute()->fetchObject(get_class($this));
+		else
+			return $this->get();
     }
 
     public function get(){
@@ -195,11 +203,15 @@ class QBuilder{
         return $result;
     }
 
-    public function hasMany($name){
+    public function hasMany($name,$exec=true){
         $model=new $name;
         $model->related=$this->table;
         $primary_key=$this->primary;
-        return $model->select()->where($model->get_fkey(),$this->$primary_key)->get();
+        $model=$model->select()->where($model->get_fkey(),$this->$primary_key);
+        if($exec)
+            return $model->get();
+        else
+            return $model;
     }
 
     public function belongsTo($name){

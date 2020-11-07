@@ -8,6 +8,6 @@ class Customer extends Model{
     protected $primary="customerNumber";
 
     public function payments(){
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Payment::class,false);
     }
 }
