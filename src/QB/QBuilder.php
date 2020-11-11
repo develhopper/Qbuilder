@@ -16,6 +16,7 @@ class QBuilder{
     protected $pivot_table=[];
     protected $changed=[];
     protected $query;
+    protected $alias;
 
     public function __construct()
     {
@@ -45,6 +46,9 @@ class QBuilder{
 
     public function select($cols="*"){
         $this->query="select $cols from $this->table";
+        if(isset($this->alias)){
+            $this->query.=" $this->alias";
+        }
         return $this;
     }
 
@@ -52,10 +56,10 @@ class QBuilder{
         $condition=" where ";
         if(count($cond)==2){
             $this->params[":cond"]=$cond[1];
-            $condition.="$cond[0]=:cond";
+            $condition.=" $cond[0]=:cond ";
         }else{
             $this->params[":cond"] = $cond[2];
-            $condition.="$cond[0]$cond[1]:cond";
+            $condition.=" $cond[0] $cond[1] :cond ";
         }
         $this->query.=$condition." ";
         return $this;
@@ -65,10 +69,10 @@ class QBuilder{
         $condition=" and ";
         if(count($cond)==2){
             $this->params[":and"]=$cond[1];
-            $condition.="$cond[0]=:and";
+            $condition.=" $cond[0]=:and ";
         }else{
             $this->params[":and"] = $cond[2];
-            $condition.="$cond[0]$cond[1]:and";
+            $condition.=" $cond[0] $cond[1] :and ";
         }
         $this->query.=$condition." ";
         return $this;
@@ -78,10 +82,10 @@ class QBuilder{
         $condition=" or ";
         if(count($cond)==2){
             $this->params[":or"]=$cond[1];
-            $condition.="$cond[0]=:or";
+            $condition.=" $cond[0]=:or ";
         }else{
             $this->params[":or"] = $cond[2];
-            $condition.="$cond[0]$cond[1]:or";
+            $condition.=" $cond[0]$cond[1]:or ";
         }
         $this->query.=$condition." ";
         return $this;
@@ -232,19 +236,36 @@ class QBuilder{
         // return $model->select()->where($model->primary, $this->{$this->get_fkey()})->get();
     }
 
-    public function join($name,$type=""){
+    public function join($name,$type="",$options=[]){
+        $a="";$b="";
+        if(!empty($options['aliases']) && count($options['aliases'])>1){
+            $a=$options['aliases'][0];
+            $b=$options['aliases'][1];
+        }
         $model=new $name;
         $model->related=$this->table;
-        $this->query="select * from {$this->table} $type join {$model->table} on {$this->table}.{$this->primary}={$model->table}.{$model->get_fkey()}";
+        
+        $this->query.=" $type join {$model->table} $b ";
+        
+        if(empty($a))
+            $a=$this->table;
+        if(empty($b))
+            $b=$model->table;
+        if(isset($options['reverse_cond'])){
+            $this->related=$model->table;
+            $this->query.="on $a.{$this->get_fkey()}=$b.{$model->primary}";
+        }
+        else
+            $this->query.="on $a.{$this->primary}=$b.{$model->get_fkey()}";
         return $this;
     }
     
-    public function left_join($name){
-        return $this->join($name,"left");
+    public function left_join($name,$options=[]){
+        return $this->join($name,"left",$options);
     }
 
-    public function right_join($name){
-        return $this->join($name,"right");
+    public function right_join($name,$options=[]){
+        return $this->join($name,"right",$options);
     }
 
     public function get_fkey(){
