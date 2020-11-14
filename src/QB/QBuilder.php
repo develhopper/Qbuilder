@@ -186,6 +186,10 @@ class QBuilder{
         return $this->execute()->fetchAll(PDO::FETCH_CLASS,get_class($this));
     }
 
+    public function asArray(){
+        return $this->execute()->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function execute(){
         $stmt=$this->db->prepare($this->query);
         $stmt->execute($this->params);
