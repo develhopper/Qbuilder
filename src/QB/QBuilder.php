@@ -32,7 +32,7 @@ class QBuilder{
             $this->fields[$key]=$value;
         }
     }
-    
+
     public function __get($key){
         if(property_exists($this,$key))
             return $this->$key;
@@ -186,10 +186,6 @@ class QBuilder{
         return $this->execute()->fetchAll(PDO::FETCH_CLASS,get_class($this));
     }
 
-    public function asArray(){
-        return $this->execute()->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function execute(){
         $stmt=$this->db->prepare($this->query);
         $stmt->execute($this->params);
@@ -230,8 +226,8 @@ class QBuilder{
     public function belongsToMany($name){
         $model = new $name;
         $this->related = explode(":",$this->pivot_table[$model->table]);
-        $this->query="select * from $this->table 
-        join {$this->related[0]} on $this->table.$this->primary={$this->related[1]} 
+        $this->query="select * from $this->table
+        join {$this->related[0]} on $this->table.$this->primary={$this->related[1]}
         join $model->table on $model->table.id={$this->related[2]}";
         if(isset($this->id)){
             $this->query.=" where $this->table.id=$this->id";
@@ -248,9 +244,14 @@ class QBuilder{
         }
         $model=new $name;
         $model->related=$this->table;
-        
+
         $this->query.=" $type join {$model->table} $b ";
-        
+
+        if(isset($options["on"])){
+            $this->query.=" on $options[on]";
+            return $this;
+        }
+
         if(empty($a))
             $a=$this->table;
         if(empty($b))
@@ -263,7 +264,7 @@ class QBuilder{
             $this->query.="on $a.{$this->primary}=$b.{$model->get_fkey()}";
         return $this;
     }
-    
+
     public function left_join($name,$options=[]){
         return $this->join($name,"left",$options);
     }
