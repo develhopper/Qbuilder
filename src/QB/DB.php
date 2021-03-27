@@ -17,7 +17,6 @@ class DB{
     
     public static function getInstance(){
         if(!isset(static::$connection)){
-            var_dump(self::getDns());
             static::$connection=new PDO(self::getDNS(),
             getenv('DB_USER') ,getenv('DB_PASSWORD'));
         }
