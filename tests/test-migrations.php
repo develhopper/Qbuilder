@@ -4,7 +4,6 @@ include __DIR__."/../vendor/autoload.php";
 
 use QB\Migration\Migration;
 use QB\Migration\Column;
-use QB\DB;
 use Denver\Env;
 
 Env::setup(__DIR__."/.env");
