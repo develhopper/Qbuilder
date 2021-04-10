@@ -251,7 +251,9 @@ class QBuilder{
             $a=$this->table;
         if(empty($b))
             $b=$model->table;
-        if(isset($options['reverse_cond'])){
+		if(isset($options['on'])){
+            $this->query.='on '.$options['on'];
+		}elseif(isset($options['reverse_cond'])){
             $this->related=$model->table;
             $this->query.="on $a.{$this->get_fkey()}=$b.{$model->primary}";
         }
