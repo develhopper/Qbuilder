@@ -186,6 +186,10 @@ class QBuilder{
         return $this->execute()->fetchAll(PDO::FETCH_CLASS,get_class($this));
     }
 
+	public function getArray(){
+		return $this->execute()->fetchAll(PDO::FETCH_ASSOC);
+	}
+
     public function execute(){
         $stmt=$this->db->prepare($this->query);
         $stmt->execute($this->params);
@@ -275,6 +279,14 @@ class QBuilder{
             return $this->related_tables[$this->related];
         }
     }
+
+	public function paginate($page,$per_page){
+			if( $page == 0 )
+					$page = 1;
+			$page=($page-1)*$per_page;
+			$this->query.=" limit $page,$per_page";
+			return $this;
+	}
 
 }
 ?>
