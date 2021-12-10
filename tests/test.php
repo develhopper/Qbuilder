@@ -16,9 +16,11 @@ echo getenv('DB_DRIVER');
 
 $country = new Country();
 		
-$data = $country->select("Code")->paginate(1,20)->getArray();
+//$data = $country->select("Code")->paginate(1,20)->getArray();
 
-var_dump($data);
-echo "\n\r";
-$data = $country->select("Code")->paginate(2,20)->getArray();
-var_dump($data);
+//var_dump($data);
+//echo "\n\r";
+//$data = $country->select("Code")->paginate(2,20)->getArray();
+//var_dump($data);
+//
+var_dump($country->find("USA"));

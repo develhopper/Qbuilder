@@ -170,7 +170,7 @@ class QBuilder{
     }
 
     public function find($id){
-        $this->query="select * from $this->table where id=$id";
+        $this->query="select * from $this->table where {$this->primary}='$id'";
         return $this->execute()->fetchObject(get_class($this));
     }
 
