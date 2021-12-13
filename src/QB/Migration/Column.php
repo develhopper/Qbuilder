@@ -23,7 +23,7 @@ class Column{
         
         $instance->str = "$name INT";
         
-        if(isset($options['increment']) && $options['increament'] == true)
+        if(isset($options['increament']) && $options['increament'] == true)
             $instance->str .= " AUTO_INCREMENT ";
         
         $instance->str .= $instance->parse_options($options);
